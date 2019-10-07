@@ -1,0 +1,6 @@
+C:\Users\Daniel\Documents\GitHub\tga\tga\bin\Debug\tga.exe.config
+C:\Users\Daniel\Documents\GitHub\tga\tga\bin\Debug\tga.exe
+C:\Users\Daniel\Documents\GitHub\tga\tga\bin\Debug\tga.pdb
+C:\Users\Daniel\Documents\GitHub\tga\tga\obj\Debug\tga.csproj.CoreCompileInputs.cache
+C:\Users\Daniel\Documents\GitHub\tga\tga\obj\Debug\tga.exe
+C:\Users\Daniel\Documents\GitHub\tga\tga\obj\Debug\tga.pdb

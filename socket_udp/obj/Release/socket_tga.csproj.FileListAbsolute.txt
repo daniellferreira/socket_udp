@@ -1,0 +1,7 @@
+C:\Users\Daniel\Documents\GitHub\tga\tga\bin\Release\tga.exe.config
+C:\Users\Daniel\Documents\GitHub\tga\tga\bin\Release\tga.exe
+C:\Users\Daniel\Documents\GitHub\tga\tga\bin\Release\tga.pdb
+C:\Users\Daniel\Documents\GitHub\tga\tga\obj\Release\socket_tga.csprojAssemblyReference.cache
+C:\Users\Daniel\Documents\GitHub\tga\tga\obj\Release\socket_tga.csproj.CoreCompileInputs.cache
+C:\Users\Daniel\Documents\GitHub\tga\tga\obj\Release\tga.exe
+C:\Users\Daniel\Documents\GitHub\tga\tga\obj\Release\tga.pdb

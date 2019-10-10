@@ -1,0 +1,6 @@
+C:\Users\Daniel\Documents\GitHub\socket_udp\socket_udp\bin\Release\tga.exe.config
+C:\Users\Daniel\Documents\GitHub\socket_udp\socket_udp\bin\Release\tga.exe
+C:\Users\Daniel\Documents\GitHub\socket_udp\socket_udp\bin\Release\tga.pdb
+C:\Users\Daniel\Documents\GitHub\socket_udp\socket_udp\obj\Release\socket_udp.csproj.CoreCompileInputs.cache
+C:\Users\Daniel\Documents\GitHub\socket_udp\socket_udp\obj\Release\tga.exe
+C:\Users\Daniel\Documents\GitHub\socket_udp\socket_udp\obj\Release\tga.pdb

@@ -2,29 +2,35 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace socket_udp
 {
     class Repository
     {
-        private readonly string filesPath = Path.GetTempPath() + "files_repository";
+        private const string RootPath = "files_repository";
+        private readonly string FilesPath = Path.GetTempPath() + RootPath;
+        private string MyDir;
 
-        internal void IniRepository()
+        internal void IniRepository(string myIp)
         {
-            Directory.CreateDirectory(filesPath);
+            MyDir = myIp;
+            Directory.CreateDirectory(GetCompletePath(MyDir));
         }
 
-        internal void CreateDirectory(string subpath)
+        private string GetFilePath(string subpath, string fileName)
         {
-            Directory.CreateDirectory(GetCompletePath(subpath));
+            return GetCompletePath(subpath) + "\\" + fileName;
         }
 
-        internal void CreateFile(string filename, byte[] bytes)
+        private string GetCompletePath(string subpath)
         {
-            string filePath = GetCompletePath(filename);
+            return $"{FilesPath}\\{subpath}";
+        }
+
+        internal void CreateFile(string subpath, string filename, byte[] bytes)
+        {
+            string filePath = GetFilePath(subpath, filename);
 
             FileInfo file = new FileInfo(filePath);
             if (!file.Directory.Exists)
@@ -44,18 +50,18 @@ namespace socket_udp
 
         internal string GetDirectoryFiles()
         {
-            return string.Join(",", GetDirectoryList());
+            return string.Join(",", GetDirectoryList(MyDir));
         }
 
-        internal byte[] GetFile(string filePath)
+        internal byte[] GetFile(string filename)
         {
             try
             {
-                return File.ReadAllBytes(GetCompletePath(filePath));
+                return File.ReadAllBytes(GetFilePath(MyDir, filename));
             }
             catch (FileNotFoundException)
             {
-                Console.WriteLine($"Arquivo '{filePath}' não encontrado");
+                Console.WriteLine("Arquivo '{0}' não encontrado", filename);
             }
             catch (Exception ex)
             {
@@ -65,56 +71,41 @@ namespace socket_udp
             return null;
         }
 
-        internal void CheckDirectoryUpdate(string directoryFiles, UDPSocket response)
+        internal List<string> CheckDirectoryUpdate(string directoryFiles, UDPSocket response, string subpath)
         {
-            List<string> requestFiles = directoryFiles.Split(',').ToList();
-            List<string> localFiles = GetDirectoryList();
+            string[] requestFiles = directoryFiles.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] localFiles = GetDirectoryList(subpath);
 
-            bool foundFile;
-            foreach (string rqFile in requestFiles)
+            foreach (string lcFile in localFiles.Except(requestFiles))
             {
-                foundFile = false;
-                foreach (string lcFile in localFiles)
-                {
-                    if (rqFile.Equals(lcFile))
-                    {
-                        foundFile = true;
-                        break;
-                    }
-                }
-
-                if (!foundFile)
-                {
-                    response.Send($"PAE;{rqFile}");
-                    Thread.Sleep(100);
-                }
-            }
-        }
-
-        private string GetFilePath(string subpath, string fileName)
-        {
-            return GetCompletePath(subpath) + "\\" + fileName;
-        }
-
-        private string GetCompletePath(string subpath)
-        {
-            return $"{filesPath}\\{subpath}";
-        }
-
-        private List<string> GetDirectoryList()
-        {
-            List<string> filePaths = new List<string>();
-
-            DirectoryInfo[] directories = new DirectoryInfo(filesPath).GetDirectories();
-            foreach (DirectoryInfo directory in directories)
-            {
-                foreach (FileInfo file in directory.GetFiles())
-                {
-                    filePaths.Add(string.Format("{0}\\{1}", directory.Name, file.Name));
-                }
+                //se houver necessidade deleta arquivos do diretorio
+                DeleteFile(subpath, lcFile);
             }
 
-            return filePaths;
+            return requestFiles.Except(localFiles).ToList();
+        }
+
+        private string[] GetDirectoryList(string subpath)
+        {
+            DirectoryInfo directory = new DirectoryInfo(GetCompletePath(subpath));
+            if (!directory.Exists)
+            {
+                Directory.CreateDirectory(directory.FullName);
+            }
+
+            return directory.GetFiles().Select(x => x.Name).ToArray();
+        }
+
+        private void DeleteFile(string subpath, string filename)
+        {
+            try
+            {
+                File.Delete(GetFilePath(subpath, filename));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
